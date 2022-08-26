@@ -2,17 +2,21 @@ package gwda_ext_opencv
 
 import (
 	"bytes"
-	"errors"
+	"fmt"
 	"image"
+	"image/jpeg"
+	"image/png"
 	"io/ioutil"
 	"mime"
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/electricbubble/gwda"
 	cvHelper "github.com/electricbubble/opencv-helper"
+	"github.com/pkg/errors"
 )
 
 // TemplateMatchMode is the type of the template matching operation.
@@ -152,7 +156,7 @@ func (dExt *DriverExt) CloseMjpegStream() {
 	dExt.doneMjpegStream <- true
 }
 
-func (dExt *DriverExt) ScreenShot() (raw *bytes.Buffer, err error) {
+func (dExt *DriverExt) takeScreenShot() (raw *bytes.Buffer, err error) {
 	// 优先使用 MJPEG 流进行截图，性能最优
 	// 如果 MJPEG 流未开启，则使用 WebDriver 的截图接口
 	if dExt.frame != nil {
@@ -162,6 +166,54 @@ func (dExt *DriverExt) ScreenShot() (raw *bytes.Buffer, err error) {
 		return nil, err
 	}
 	return
+}
+
+// saveScreenShot saves image file to $CWD/screenshots/ folder
+func (dExt *DriverExt) saveScreenShot(raw *bytes.Buffer, fileName string) (string, error) {
+	img, format, err := image.Decode(raw)
+	if err != nil {
+		return "", errors.Wrap(err, "decode screenshot image failed")
+	}
+
+	dir, _ := os.Getwd()
+	screenshotsDir := filepath.Join(dir, "screenshots")
+	if err = os.MkdirAll(screenshotsDir, os.ModePerm); err != nil {
+		return "", errors.Wrap(err, "create screenshots directory failed")
+	}
+	screenshotPath := filepath.Join(screenshotsDir,
+		fmt.Sprintf("%s.%s", fileName, format))
+
+	file, err := os.Create(screenshotPath)
+	if err != nil {
+		return "", errors.Wrap(err, "create screenshot image file failed")
+	}
+	defer func() {
+		_ = file.Close()
+	}()
+
+	switch format {
+	case "png":
+		err = png.Encode(file, img)
+	case "jpeg":
+		err = jpeg.Encode(file, img, nil)
+	default:
+		return "", fmt.Errorf("unsupported image format: %s", format)
+	}
+	if err != nil {
+		return "", errors.Wrap(err, "encode screenshot image failed")
+	}
+
+	return screenshotPath, nil
+}
+
+// ScreenShot takes screenshot and saves image file to $CWD/screenshots/ folder
+func (dExt *DriverExt) ScreenShot(fileName string) (string, error) {
+	raw, err := dExt.takeScreenShot()
+	if err != nil {
+		return "", errors.Wrap(err, "screenshot by WDA failed")
+	}
+
+	return dExt.saveScreenShot(raw, fileName)
 }
 
 // func (sExt *DriverExt) findImgRect(search string) (rect image.Rectangle, err error) {
@@ -181,7 +233,7 @@ func (dExt *DriverExt) FindAllImageRect(search string) (rects []image.Rectangle,
 	if bufSearch, err = getBufFromDisk(search); err != nil {
 		return nil, err
 	}
-	if bufSource, err = dExt.ScreenShot(); err != nil {
+	if bufSource, err = dExt.takeScreenShot(); err != nil {
 		return nil, err
 	}
 
@@ -221,7 +273,7 @@ func (dExt *DriverExt) FindImageRectInUIKit(search string) (x, y, width, height 
 	if bufSearch, err = getBufFromDisk(search); err != nil {
 		return 0, 0, 0, 0, err
 	}
-	if bufSource, err = dExt.ScreenShot(); err != nil {
+	if bufSource, err = dExt.takeScreenShot(); err != nil {
 		return 0, 0, 0, 0, err
 	}
 
