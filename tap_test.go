@@ -1,8 +1,9 @@
 package gwda_ext_opencv
 
 import (
-	"github.com/electricbubble/gwda"
 	"testing"
+
+	"github.com/electricbubble/gwda"
 )
 
 func TestDriverExt_TapWithNumber(t *testing.T) {
@@ -20,5 +21,17 @@ func TestDriverExt_TapWithNumber(t *testing.T) {
 	checkErr(t, err)
 
 	err = driverExt.TapWithNumberOffset(pathSearch, 3, 0.5, 0.75)
+	checkErr(t, err)
+}
+
+func TestDriverExt_TapWithOCR(t *testing.T) {
+	driver, err := gwda.NewUSBDriver(nil)
+	checkErr(t, err)
+
+	driverExt, err := Extend(driver, 0.95)
+	checkErr(t, err)
+
+	// 需要点击文字上方的图标
+	err = driverExt.TapOffset("抖音", 0.5, -1)
 	checkErr(t, err)
 }

@@ -202,7 +202,19 @@ func getBufFromDisk(name string) (*bytes.Buffer, error) {
 	return bytes.NewBuffer(all), nil
 }
 
+// isPathExists returns true if path exists, whether path is file or dir
+func isPathExists(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
 func (dExt *DriverExt) FindImageRectInUIKit(search string) (x, y, width, height float64, err error) {
+	if !isPathExists(search) {
+		return dExt.FindTextByOCR(search)
+	}
+
 	var bufSource, bufSearch *bytes.Buffer
 	if bufSearch, err = getBufFromDisk(search); err != nil {
 		return 0, 0, 0, 0, err
