@@ -3,8 +3,6 @@ package gwda_ext_opencv
 import (
 	"bytes"
 	"errors"
-	"github.com/electricbubble/gwda"
-	cvHelper "github.com/electricbubble/opencv-helper"
 	"image"
 	"io/ioutil"
 	"mime"
@@ -12,6 +10,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/electricbubble/gwda"
+	cvHelper "github.com/electricbubble/opencv-helper"
 )
 
 // TemplateMatchMode is the type of the template matching operation.
