@@ -1,13 +1,13 @@
-# gwda-ext-opencv
+# gwda-ext
 
-[electricbubble/gwda](https://github.com/electricbubble/gwda) 的图片、OCR 匹配扩展库。
+[electricbubble/gwda](https://github.com/electricbubble/gwda) 的扩展库，包括图片识别（OpenCV）、OCR 识别、辅助函数等。
 
 ## 安装
 
 > 必须先安装好 `OpenCV`，安装步骤可参考 [`hybridgroup/gocv`](https://github.com/hybridgroup/gocv#macos)
 
 ```bash
-go get github.com/debugtalk/gwda-ext-opencv
+go get github.com/debugtalk/gwda-ext
 ```
 
 ## 使用
@@ -17,7 +17,7 @@ package main
 import (
 	"fmt"
 	. "github.com/electricbubble/gwda"
-	extOpenCV "github.com/debugtalk/gwda-ext-opencv"
+	gwdaExt "github.com/debugtalk/gwda-ext"
 	"log"
 )
 
@@ -25,7 +25,7 @@ func main() {
 	driver, err := NewUSBDriver(nil)
 	checkErr(err)
 
-	driverExt, err := extOpenCV.Extend(driver, 0.95)
+	driverExt, err := gwdaExt.Extend(driver, 0.95)
 	checkErr(err, "扩展 driver ，指定匹配阀值为 95%（在不修改或者使用 `OnlyOnceThreshold` 的情况下）")
 
 	pathZero := "/Users/hero/Documents/temp/2020-05/opencv/flag0.png"
@@ -81,7 +81,7 @@ func main() {
 	err = driverExt.OnlyOnceThreshold(0.92).SwipeLeftOffset(pathSlash, -0.15, -0.25)
 	checkErr(err, "向左👈滑动，临时指定匹配阀值为 92%（起始滑动点 x 向左👈偏移 15%， y 向上👆偏移 25% ）")
 
-	// driverExt.Debug(extOpenCV.DmNotMatch)
+	// driverExt.Debug(gwdaExt.DmNotMatch)
 
 	// 撤销 3次 操作
 	undo(driverExt, 3)
@@ -99,7 +99,7 @@ func main() {
 	undo(driverExt, 10)
 }
 
-func undo(dExt *extOpenCV.DriverExt, n int) {
+func undo(dExt *gwdaExt.DriverExt, n int) {
 	pathUndo := "/Users/hero/Documents/temp/2020-05/opencv/undo.png"
 	err := dExt.TapWithNumber(pathUndo, n)
 	checkErr(err, fmt.Sprintf("撤销 %d次 操作\n", n))

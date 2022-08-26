@@ -1,4 +1,4 @@
-module github.com/debugtalk/gwda-ext-opencv
+module github.com/debugtalk/gwda-ext
 
 go 1.13
 
