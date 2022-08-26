@@ -1,15 +1,13 @@
 # gwda-ext-opencv
 
-[electricbubble/gwda](https://github.com/electricbubble/gwda) 的图片匹配扩展库。
+[electricbubble/gwda](https://github.com/electricbubble/gwda) 的图片、OCR 匹配扩展库。
 
 ## 安装
 
-> 必须先安装好 `OpenCV`，安装步骤可参考 `hybridgroup/gocv`:
-> - [macOS](https://github.com/hybridgroup/gocv#macos) 
-> 建议直接用 `Homebrew` 安装
+> 必须先安装好 `OpenCV`，安装步骤可参考 [`hybridgroup/gocv`](https://github.com/hybridgroup/gocv#macos)
 
 ```bash
-go get github.com/electricbubble/gwda-ext-opencv
+go get github.com/debugtalk/gwda-ext-opencv
 ```
 
 ## 使用
@@ -19,7 +17,7 @@ package main
 import (
 	"fmt"
 	. "github.com/electricbubble/gwda"
-	extOpenCV "github.com/electricbubble/gwda-ext-opencv"
+	extOpenCV "github.com/debugtalk/gwda-ext-opencv"
 	"log"
 )
 
@@ -115,16 +113,20 @@ func checkErr(err error, msg ...string) {
 
 ```
 
-示例代码运行预览  
+示例代码运行预览
+
 ![gwda-ext-opencv](https://raw.githubusercontent.com/electricbubble/ImageHosting/master/img/202005221801_gwda_ext_opencv.gif)
 
 
 ### 手势密码
-首先是抠出一张手势密码中的触摸点小图，如下图被圈中的其中一个  
-<img src="https://raw.githubusercontent.com/electricbubble/ImageHosting/master/img/20200525101820.png" alt="gesture-password" style="zoom:25%;" />  
+
+首先是抠出一张手势密码中的触摸点小图，如下图被圈中的其中一个
+
+<img src="https://raw.githubusercontent.com/electricbubble/ImageHosting/master/img/20200525101820.png" alt="gesture-password" style="zoom:25%;" />
 
 `GesturePassword` 函数会通过这个 触摸点小图 找到全部，并根据上图所示的进行排序。
 
 比如，这里需要一个 `M` 的手势密码，根据排序后的索引值，我们只需要传入 `[]int{6, 3, 0, 4, 2, 5, 8}`
 可参考 [gesture_test.go](./gesture_test.go)
-> 这里就不放预览图了，觉得有兴趣的可以自己尝试下，这里也只是一个简单的应用方向。 
+
+> 这里就不放预览图了，觉得有兴趣的可以自己尝试下，这里也只是一个简单的应用方向。

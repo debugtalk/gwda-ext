@@ -1,4 +1,4 @@
-module github.com/electricbubble/gwda-ext-opencv
+module github.com/debugtalk/gwda-ext-opencv
 
 go 1.13
 

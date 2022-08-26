@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	. "github.com/electricbubble/gwda"
-	extOpenCV "github.com/electricbubble/gwda-ext-opencv"
 	"log"
+
+	extOpenCV "github.com/debugtalk/gwda-ext-opencv"
+	"github.com/electricbubble/gwda"
 )
 
 func main() {
-	driver, err := NewUSBDriver(nil)
+	driver, err := gwda.NewUSBDriver(nil)
 	checkErr(err)
 
 	driverExt, err := extOpenCV.Extend(driver, 0.95)
