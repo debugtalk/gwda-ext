@@ -21,7 +21,7 @@ func (dExt *DriverExt) SwipeOffsetFloat(pathname string, toX, toY, xOffset, yOff
 	fromX := x + width*xOffset
 	fromY := y + height*yOffset
 
-	return dExt.driver.SwipeFloat(fromX, fromY, toX, toY)
+	return dExt.WebDriver.SwipeFloat(fromX, fromY, toX, toY)
 }
 
 func (dExt *DriverExt) SwipeUp(pathname string, distance ...float64) (err error) {
@@ -44,7 +44,7 @@ func (dExt *DriverExt) SwipeUpOffset(pathname string, xOffset, yOffset float64, 
 	toX := fromX
 	toY := fromY - height*distance[0]
 
-	return dExt.driver.SwipeFloat(fromX, fromY, toX, toY)
+	return dExt.WebDriver.SwipeFloat(fromX, fromY, toX, toY)
 }
 
 func (dExt *DriverExt) SwipeDown(pathname string, distance ...float64) (err error) {
@@ -67,7 +67,7 @@ func (dExt *DriverExt) SwipeDownOffset(pathname string, xOffset, yOffset float64
 	toX := fromX
 	toY := fromY + height*distance[0]
 
-	return dExt.driver.SwipeFloat(fromX, fromY, toX, toY)
+	return dExt.WebDriver.SwipeFloat(fromX, fromY, toX, toY)
 }
 
 func (dExt *DriverExt) SwipeLeft(pathname string, distance ...float64) (err error) {
@@ -90,7 +90,7 @@ func (dExt *DriverExt) SwipeLeftOffset(pathname string, xOffset, yOffset float64
 	toX := fromX - width*distance[0]
 	toY := fromY
 
-	return dExt.driver.SwipeFloat(fromX, fromY, toX, toY)
+	return dExt.WebDriver.SwipeFloat(fromX, fromY, toX, toY)
 }
 
 func (dExt *DriverExt) SwipeRight(pathname string, distance ...float64) (err error) {
@@ -113,5 +113,5 @@ func (dExt *DriverExt) SwipeRightOffset(pathname string, xOffset, yOffset float6
 	toX := fromX + width*distance[0]
 	toY := fromY
 
-	return dExt.driver.SwipeFloat(fromX, fromY, toX, toY)
+	return dExt.WebDriver.SwipeFloat(fromX, fromY, toX, toY)
 }

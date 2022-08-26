@@ -121,7 +121,7 @@ type OCRService interface {
 
 func (dExt *DriverExt) FindTextByOCR(search string) (x, y, width, height float64, err error) {
 	var bufSource *bytes.Buffer
-	if bufSource, err = dExt.takeScreenshot(); err != nil {
+	if bufSource, err = dExt.ScreenShot(); err != nil {
 		err = fmt.Errorf("screenshot error: %v", err)
 		return
 	}

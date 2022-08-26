@@ -45,7 +45,7 @@ const (
 )
 
 type DriverExt struct {
-	driver          gwda.WebDriver
+	gwda.WebDriver
 	scale           float64
 	MatchMode       TemplateMatchMode
 	Threshold       float64
@@ -59,10 +59,10 @@ type DriverExt struct {
 // 默认匹配模式为 TmCcoeffNormed，
 // 默认关闭 OpenCV 匹配值计算后的输出
 func Extend(driver gwda.WebDriver, threshold float64, matchMode ...TemplateMatchMode) (dExt *DriverExt, err error) {
-	dExt = &DriverExt{driver: driver}
+	dExt = &DriverExt{WebDriver: driver}
 	dExt.doneMjpegStream = make(chan bool, 1)
 
-	if dExt.scale, err = dExt.driver.Scale(); err != nil {
+	if dExt.scale, err = dExt.Scale(); err != nil {
 		return &DriverExt{}, err
 	}
 
@@ -77,7 +77,7 @@ func Extend(driver gwda.WebDriver, threshold float64, matchMode ...TemplateMatch
 
 func (dExt *DriverExt) OnlyOnceThreshold(threshold float64) (newExt *DriverExt) {
 	newExt = new(DriverExt)
-	newExt.driver = dExt.driver
+	newExt.WebDriver = dExt.WebDriver
 	newExt.scale = dExt.scale
 	newExt.MatchMode = dExt.MatchMode
 	newExt.Threshold = threshold
@@ -86,7 +86,7 @@ func (dExt *DriverExt) OnlyOnceThreshold(threshold float64) (newExt *DriverExt) 
 
 func (dExt *DriverExt) OnlyOnceMatchMode(matchMode TemplateMatchMode) (newExt *DriverExt) {
 	newExt = new(DriverExt)
-	newExt.driver = dExt.driver
+	newExt.WebDriver = dExt.WebDriver
 	newExt.scale = dExt.scale
 	newExt.MatchMode = matchMode
 	newExt.Threshold = dExt.Threshold
@@ -152,11 +152,13 @@ func (dExt *DriverExt) CloseMjpegStream() {
 	dExt.doneMjpegStream <- true
 }
 
-func (dExt *DriverExt) takeScreenshot() (raw *bytes.Buffer, err error) {
+func (dExt *DriverExt) ScreenShot() (raw *bytes.Buffer, err error) {
+	// 优先使用 MJPEG 流进行截图，性能最优
+	// 如果 MJPEG 流未开启，则使用 WebDriver 的截图接口
 	if dExt.frame != nil {
 		return dExt.frame, nil
 	}
-	if raw, err = dExt.driver.Screenshot(); err != nil {
+	if raw, err = dExt.WebDriver.Screenshot(); err != nil {
 		return nil, err
 	}
 	return
@@ -179,7 +181,7 @@ func (dExt *DriverExt) FindAllImageRect(search string) (rects []image.Rectangle,
 	if bufSearch, err = getBufFromDisk(search); err != nil {
 		return nil, err
 	}
-	if bufSource, err = dExt.takeScreenshot(); err != nil {
+	if bufSource, err = dExt.ScreenShot(); err != nil {
 		return nil, err
 	}
 
@@ -219,7 +221,7 @@ func (dExt *DriverExt) FindImageRectInUIKit(search string) (x, y, width, height 
 	if bufSearch, err = getBufFromDisk(search); err != nil {
 		return 0, 0, 0, 0, err
 	}
-	if bufSource, err = dExt.takeScreenshot(); err != nil {
+	if bufSource, err = dExt.ScreenShot(); err != nil {
 		return 0, 0, 0, 0, err
 	}
 
@@ -242,11 +244,11 @@ func (dExt *DriverExt) MappingToRectInUIKit(rect image.Rectangle) (x, y, width, 
 }
 
 func (dExt *DriverExt) PerformTouchActions(touchActions *gwda.TouchActions) error {
-	return dExt.driver.PerformAppiumTouchActions(touchActions)
+	return dExt.PerformAppiumTouchActions(touchActions)
 }
 
 func (dExt *DriverExt) PerformActions(actions *gwda.W3CActions) error {
-	return dExt.driver.PerformW3CActions(actions)
+	return dExt.PerformW3CActions(actions)
 }
 
 // IsExist

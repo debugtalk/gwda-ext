@@ -1,9 +1,10 @@
 package gwda_ext_opencv
 
 import (
-	"github.com/electricbubble/gwda"
 	"image"
 	"sort"
+
+	"github.com/electricbubble/gwda"
 )
 
 func (dExt *DriverExt) GesturePassword(pathname string, password ...int) (err error) {
