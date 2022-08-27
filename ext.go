@@ -1,4 +1,4 @@
-package gwda_ext_opencv
+package uixt
 
 import (
 	"bytes"
@@ -50,6 +50,7 @@ const (
 
 type DriverExt struct {
 	gwda.WebDriver
+	windowSize      gwda.Size
 	scale           float64
 	MatchMode       TemplateMatchMode
 	Threshold       float64
@@ -68,6 +69,12 @@ func Extend(driver gwda.WebDriver, threshold float64, matchMode ...TemplateMatch
 
 	if dExt.scale, err = dExt.Scale(); err != nil {
 		return &DriverExt{}, err
+	}
+
+	// get device window size
+	dExt.windowSize, err = dExt.WebDriver.WindowSize()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get windows size")
 	}
 
 	if len(matchMode) == 0 {
@@ -264,11 +271,33 @@ func isPathExists(path string) bool {
 	return true
 }
 
-func (dExt *DriverExt) FindImageRectInUIKit(search string) (x, y, width, height float64, err error) {
+func (dExt *DriverExt) FindUIElement(param string) (ele gwda.WebElement, err error) {
+	var selector gwda.BySelector
+	if strings.HasPrefix(param, "/") {
+		// xpath
+		selector = gwda.BySelector{
+			XPath: param,
+		}
+	} else {
+		// name
+		selector = gwda.BySelector{
+			LinkText: gwda.NewElementAttribute().WithName(param),
+		}
+	}
+
+	return dExt.WebDriver.FindElement(selector)
+}
+
+func (dExt *DriverExt) FindUIRectInUIKit(search string) (x, y, width, height float64, err error) {
+	// click on text, using OCR
 	if !isPathExists(search) {
 		return dExt.FindTextByOCR(search)
 	}
+	// click on image, using opencv
+	return dExt.FindImageRectInUIKit(search)
+}
 
+func (dExt *DriverExt) FindImageRectInUIKit(search string) (x, y, width, height float64, err error) {
 	var bufSource, bufSearch *bytes.Buffer
 	if bufSearch, err = getBufFromDisk(search); err != nil {
 		return 0, 0, 0, 0, err

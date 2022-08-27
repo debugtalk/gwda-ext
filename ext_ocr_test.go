@@ -1,4 +1,4 @@
-package gwda_ext_opencv
+package uixt
 
 import (
 	"testing"

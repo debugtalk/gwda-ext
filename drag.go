@@ -1,4 +1,4 @@
-package gwda_ext_opencv
+package uixt
 
 func (dExt *DriverExt) Drag(pathname string, toX, toY int, pressForDuration ...float64) (err error) {
 	return dExt.DragFloat(pathname, float64(toX), float64(toY), pressForDuration...)
@@ -18,7 +18,7 @@ func (dExt *DriverExt) DragOffsetFloat(pathname string, toX, toY, xOffset, yOffs
 	}
 
 	var x, y, width, height float64
-	if x, y, width, height, err = dExt.FindImageRectInUIKit(pathname); err != nil {
+	if x, y, width, height, err = dExt.FindUIRectInUIKit(pathname); err != nil {
 		return err
 	}
 

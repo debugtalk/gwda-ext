@@ -1,4 +1,4 @@
-package gwda_ext_opencv
+package uixt
 
 func (dExt *DriverExt) Swipe(pathname string, toX, toY int) (err error) {
 	return dExt.SwipeFloat(pathname, float64(toX), float64(toY))
@@ -14,7 +14,7 @@ func (dExt *DriverExt) SwipeOffset(pathname string, toX, toY int, xOffset, yOffs
 
 func (dExt *DriverExt) SwipeOffsetFloat(pathname string, toX, toY, xOffset, yOffset float64) (err error) {
 	var x, y, width, height float64
-	if x, y, width, height, err = dExt.FindImageRectInUIKit(pathname); err != nil {
+	if x, y, width, height, err = dExt.FindUIRectInUIKit(pathname); err != nil {
 		return err
 	}
 
@@ -34,7 +34,7 @@ func (dExt *DriverExt) SwipeUpOffset(pathname string, xOffset, yOffset float64, 
 	}
 
 	var x, y, width, height float64
-	if x, y, width, height, err = dExt.FindImageRectInUIKit(pathname); err != nil {
+	if x, y, width, height, err = dExt.FindUIRectInUIKit(pathname); err != nil {
 		return err
 	}
 
@@ -57,7 +57,7 @@ func (dExt *DriverExt) SwipeDownOffset(pathname string, xOffset, yOffset float64
 	}
 
 	var x, y, width, height float64
-	if x, y, width, height, err = dExt.FindImageRectInUIKit(pathname); err != nil {
+	if x, y, width, height, err = dExt.FindUIRectInUIKit(pathname); err != nil {
 		return err
 	}
 
@@ -80,7 +80,7 @@ func (dExt *DriverExt) SwipeLeftOffset(pathname string, xOffset, yOffset float64
 	}
 
 	var x, y, width, height float64
-	if x, y, width, height, err = dExt.FindImageRectInUIKit(pathname); err != nil {
+	if x, y, width, height, err = dExt.FindUIRectInUIKit(pathname); err != nil {
 		return err
 	}
 
@@ -103,7 +103,7 @@ func (dExt *DriverExt) SwipeRightOffset(pathname string, xOffset, yOffset float6
 	}
 
 	var x, y, width, height float64
-	if x, y, width, height, err = dExt.FindImageRectInUIKit(pathname); err != nil {
+	if x, y, width, height, err = dExt.FindUIRectInUIKit(pathname); err != nil {
 		return err
 	}
 

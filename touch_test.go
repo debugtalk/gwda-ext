@@ -1,8 +1,9 @@
-package gwda_ext_opencv
+package uixt
 
 import (
-	"github.com/electricbubble/gwda"
 	"testing"
+
+	"github.com/electricbubble/gwda"
 )
 
 func TestDriverExt_ForceTouch(t *testing.T) {

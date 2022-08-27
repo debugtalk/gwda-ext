@@ -1,4 +1,4 @@
-package gwda_ext_opencv
+package uixt
 
 func (dExt *DriverExt) ForceTouch(pathname string, pressure float64, duration ...float64) (err error) {
 	return dExt.ForceTouchOffset(pathname, pressure, 0.5, 0.5, duration...)
@@ -9,7 +9,7 @@ func (dExt *DriverExt) ForceTouchOffset(pathname string, pressure, xOffset, yOff
 		duration = []float64{1.0}
 	}
 	var x, y, width, height float64
-	if x, y, width, height, err = dExt.FindImageRectInUIKit(pathname); err != nil {
+	if x, y, width, height, err = dExt.FindUIRectInUIKit(pathname); err != nil {
 		return err
 	}
 
@@ -25,7 +25,7 @@ func (dExt *DriverExt) TouchAndHoldOffset(pathname string, xOffset, yOffset floa
 		duration = []float64{1.0}
 	}
 	var x, y, width, height float64
-	if x, y, width, height, err = dExt.FindImageRectInUIKit(pathname); err != nil {
+	if x, y, width, height, err = dExt.FindUIRectInUIKit(pathname); err != nil {
 		return err
 	}
 
